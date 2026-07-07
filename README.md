@@ -164,4 +164,3 @@ project/
 - Helmet security headers, strict CORS configuration
 - Input validation (email format, password length, ID validation)
 - Parameterized SQL queries (no injection)
-- `.env` gitignored — secrets never committed
