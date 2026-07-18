@@ -151,7 +151,6 @@ async function ensureDirs() {
   }
 }
 
-// Vercel: only connect DB on cold start, don't listen
 if (process.env.VERCEL !== '1') {
   const startServer = async () => {
     try {
@@ -167,6 +166,15 @@ if (process.env.VERCEL !== '1') {
     }
   };
   startServer();
+} else {
+  let dbReady = false;
+  app.use('/api', (req, res, next) => {
+    if (dbReady) return next();
+    initializeDatabase()
+      .then(() => { dbReady = true; })
+      .catch(err => console.error('Vercel DB init error:', err.message))
+      .finally(() => next());
+  });
 }
 
 export default app;
