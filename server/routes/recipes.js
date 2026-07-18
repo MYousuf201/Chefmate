@@ -45,6 +45,13 @@ if (isVercel) {
   upload = multer({ storage: multer.memoryStorage(), fileFilter: imageFilter, limits: { fileSize: 5 * 1024 * 1024 } });
 }
 
+function parseJsonArray(value) {
+  if (value == null) return [];
+  if (Array.isArray(value)) return value;
+  try { return JSON.parse(value); }
+  catch { return []; }
+}
+
 const router = express.Router();
 
 // Get all recipes with optional search/filter/pagination
@@ -146,13 +153,13 @@ router.get('/', optionalAuth, async (req, res) => {
       let instructions = [];
 
       try {
-        ingredients = recipe.ingredients ? JSON.parse(recipe.ingredients) : [];
+        ingredients = parseJsonArray(recipe.ingredients);
       } catch {
         ingredients = [];
       }
 
       try {
-        instructions = recipe.instructions ? JSON.parse(recipe.instructions) : [];
+        instructions = parseJsonArray(recipe.instructions);
       } catch {
         instructions = [];
       }
@@ -231,12 +238,12 @@ router.get('/:id', optionalAuth, async (req, res) => {
 
     const recipe = recipes[0];
     try {
-      recipe.ingredients = JSON.parse(recipe.ingredients || '[]');
+      recipe.ingredients = parseJsonArray(recipe.ingredients);
     } catch {
       recipe.ingredients = [];
     }
     try {
-      recipe.instructions = JSON.parse(recipe.instructions || '[]');
+      recipe.instructions = parseJsonArray(recipe.instructions);
     } catch {
       recipe.instructions = [];
     }
@@ -294,8 +301,8 @@ router.get('/user/:userId', optionalAuth, async (req, res) => {
       try {
         return {
           ...recipe,
-          ingredients: JSON.parse(recipe.ingredients || '[]'),
-          instructions: JSON.parse(recipe.instructions || '[]')
+          ingredients: parseJsonArray(recipe.ingredients),
+          instructions: parseJsonArray(recipe.instructions)
         };
       } catch {
         return { ...recipe, ingredients: [], instructions: [] };
@@ -332,10 +339,10 @@ router.get('/favorites/:userId', authenticateToken, async (req, res) => {
       let ingredients = [];
       let instructions = [];
       try {
-        ingredients = JSON.parse(recipe.ingredients || '[]');
+        ingredients = parseJsonArray(recipe.ingredients);
       } catch {}
       try {
-        instructions = JSON.parse(recipe.instructions || '[]');
+        instructions = parseJsonArray(recipe.instructions);
       } catch {}
       return { ...recipe, ingredients, instructions };
     });
@@ -422,9 +429,7 @@ router.post('/by-ingredients', authenticateToken, async (req, res) => {
     for (const recipe of recipes) {
       let recipeIngredients = [];
       try {
-        recipeIngredients = typeof recipe.ingredients === 'string'
-          ? JSON.parse(recipe.ingredients)
-          : recipe.ingredients;
+        recipeIngredients = parseJsonArray(recipe.ingredients);
       } catch { recipeIngredients = []; }
 
       const normalizedRecipe = recipeIngredients.map(i => {
@@ -451,8 +456,8 @@ router.post('/by-ingredients', authenticateToken, async (req, res) => {
       if (matched.length > 0) {
         let parsed = { ...recipe };
         try {
-          parsed.ingredients = JSON.parse(recipe.ingredients || '[]');
-          parsed.instructions = JSON.parse(recipe.instructions || '[]');
+          parsed.ingredients = parseJsonArray(recipe.ingredients);
+          parsed.instructions = parseJsonArray(recipe.instructions);
         } catch { parsed.ingredients = []; parsed.instructions = []; }
 
         scored.push({
@@ -521,12 +526,12 @@ router.post('/', authenticateToken, async (req, res) => {
 
     const recipe = recipes[0];
     try {
-      recipe.ingredients = JSON.parse(recipe.ingredients || '[]');
+      recipe.ingredients = parseJsonArray(recipe.ingredients);
     } catch {
       recipe.ingredients = [];
     }
     try {
-      recipe.instructions = JSON.parse(recipe.instructions || '[]');
+      recipe.instructions = parseJsonArray(recipe.instructions);
     } catch {
       recipe.instructions = [];
     }
@@ -615,12 +620,12 @@ router.put('/:id', authenticateToken, async (req, res) => {
 
     const recipe = recipes[0];
     try {
-      recipe.ingredients = JSON.parse(recipe.ingredients || '[]');
+      recipe.ingredients = parseJsonArray(recipe.ingredients);
     } catch {
       recipe.ingredients = [];
     }
     try {
-      recipe.instructions = JSON.parse(recipe.instructions || '[]');
+      recipe.instructions = parseJsonArray(recipe.instructions);
     } catch {
       recipe.instructions = [];
     }

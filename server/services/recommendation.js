@@ -1,5 +1,12 @@
 import { pool } from '../config/database.js';
 
+function parseJsonArray(value) {
+  if (value == null) return [];
+  if (Array.isArray(value)) return value;
+  try { return JSON.parse(value); }
+  catch { return []; }
+}
+
 const WEIGHTS = {
   CUISINE: 0.35,
   INGREDIENT: 0.30,
@@ -109,9 +116,7 @@ export async function buildUserProfile(userId) {
     if (recipe.ingredients) {
       let ingredients = [];
       try {
-        ingredients = typeof recipe.ingredients === 'string'
-          ? JSON.parse(recipe.ingredients)
-          : recipe.ingredients;
+        ingredients = parseJsonArray(recipe.ingredients);
       } catch { ingredients = []; }
 
       for (const ing of ingredients) {

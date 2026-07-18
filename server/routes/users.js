@@ -3,6 +3,13 @@ import { pool } from '../config/database.js';
 import { authenticateToken, optionalAuth } from '../middleware/auth.js';
 import { validateId } from '../config/validation.js';
 
+function parseJsonArray(value) {
+  if (value == null) return [];
+  if (Array.isArray(value)) return value;
+  try { return JSON.parse(value); }
+  catch { return []; }
+}
+
 const router = express.Router();
 
 // Get user profile by ID
@@ -86,13 +93,13 @@ router.get('/:id/recipes', optionalAuth, async (req, res) => {
       let instructions = [];
 
       try {
-        ingredients = recipe.ingredients ? JSON.parse(recipe.ingredients) : [];
+        ingredients = parseJsonArray(recipe.ingredients);
       } catch {
         ingredients = [];
       }
 
       try {
-        instructions = recipe.instructions ? JSON.parse(recipe.instructions) : [];
+        instructions = parseJsonArray(recipe.instructions);
       } catch {
         instructions = [];
       }
