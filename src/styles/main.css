@@ -61,9 +61,6 @@ body {
   opacity: 0.8;
 }
 
-.site-logo {
-  mix-blend-mode: multiply;
-}
 
 .auth-section {
   display: flex;

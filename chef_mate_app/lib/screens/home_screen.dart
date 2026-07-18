@@ -84,10 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Row(
                   children: [
-                    ColorFiltered(
-                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                      child: Image.asset('assets/images/logo.png', height: 32),
-                    ),
+                    Image.asset('assets/images/logo.png', height: 32),
                     const SizedBox(width: 8),
                     const Text(
                       'Chef-Mate',
