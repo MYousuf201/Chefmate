@@ -40,7 +40,7 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-app.use('/downloads', express.static(path.join(__dirname, '..', 'downloads')));
+app.use('/downloads', express.static(path.join(__dirname, '..', 'public', 'downloads')));
 app.use(express.static(path.join(__dirname, '..', 'dist')));
 
 // Rate limiting
@@ -146,7 +146,7 @@ async function ensureDirs() {
   if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
   }
-  const downloadsDir = path.join(__dirname, '..', 'downloads');
+  const downloadsDir = path.join(__dirname, '..', 'public', 'downloads');
   if (!fs.existsSync(downloadsDir)) {
     fs.mkdirSync(downloadsDir, { recursive: true });
   }
