@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.restaurant_menu, size: 64, color: AppTheme.primaryColor),
+                  Image.asset('assets/images/logo.png', height: 64),
                   const SizedBox(height: 8),
                   const Text('Chef-Mate', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 32),

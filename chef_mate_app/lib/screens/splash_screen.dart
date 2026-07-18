@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.restaurant_menu, size: 80, color: Colors.white),
+              Image.asset('assets/images/logo.png', height: 80),
               SizedBox(height: 16),
               Text('Chef-Mate', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
               SizedBox(height: 32),
