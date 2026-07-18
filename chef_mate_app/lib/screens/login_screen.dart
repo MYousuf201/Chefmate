@@ -50,9 +50,14 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset('assets/images/logo.png', height: 64),
-                  const SizedBox(height: 8),
-                  const Text('Chef-Mate', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset('assets/images/logo.png', height: 40),
+                      const SizedBox(width: 10),
+                      const Text('Chef-Mate', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                   const SizedBox(height: 32),
                   TextFormField(
                     controller: _emailController,

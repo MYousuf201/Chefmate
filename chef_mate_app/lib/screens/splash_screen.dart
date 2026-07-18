@@ -37,15 +37,20 @@ class _SplashScreenState extends State<SplashScreen> {
             end: Alignment.bottomRight,
           ),
         ),
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset('assets/images/logo.png', height: 80),
-              SizedBox(height: 16),
-              Text('Chef-Mate', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
-              SizedBox(height: 32),
-              CircularProgressIndicator(color: Colors.white),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset('assets/images/logo.png', height: 48),
+                  const SizedBox(width: 12),
+                  const Text('Chef-Mate', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
+                ],
+              ),
+              const SizedBox(height: 32),
+              const CircularProgressIndicator(color: Colors.white),
             ],
           ),
         ),
