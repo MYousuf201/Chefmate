@@ -44,7 +44,10 @@ class _SplashScreenState extends State<SplashScreen> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset('assets/images/logo.png', height: 48),
+                  ColorFiltered(
+                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    child: Image.asset('assets/images/logo.png', height: 48),
+                  ),
                   const SizedBox(width: 12),
                   const Text('Chef-Mate', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
                 ],
