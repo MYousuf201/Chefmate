@@ -13,19 +13,6 @@ import { identifyIngredients } from '../services/vision.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-const imageStorage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, uploadsDir),
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname) || '.jpg';
-    const name = crypto.randomBytes(16).toString('hex') + ext;
-    cb(null, name);
-  }
-});
 
 const imageFilter = (_req, file, cb) => {
   if (file.mimetype.startsWith('image/') || file.mimetype === 'application/octet-stream') {
@@ -35,8 +22,28 @@ const imageFilter = (_req, file, cb) => {
   }
 };
 
-const uploadImage = multer({ storage: imageStorage, fileFilter: imageFilter, limits: { fileSize: 5 * 1024 * 1024 } });
-const upload = multer({ storage: multer.memoryStorage(), fileFilter: imageFilter, limits: { fileSize: 5 * 1024 * 1024 } });
+const isVercel = process.env.VERCEL === '1';
+let uploadImage, upload;
+
+if (isVercel) {
+  uploadImage = multer({ storage: multer.memoryStorage(), fileFilter: imageFilter, limits: { fileSize: 5 * 1024 * 1024 } });
+  upload = multer({ storage: multer.memoryStorage(), fileFilter: imageFilter, limits: { fileSize: 5 * 1024 * 1024 } });
+} else {
+  const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+  const imageStorage = multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, uploadsDir),
+    filename: (_req, file, cb) => {
+      const ext = path.extname(file.originalname) || '.jpg';
+      const name = crypto.randomBytes(16).toString('hex') + ext;
+      cb(null, name);
+    }
+  });
+  uploadImage = multer({ storage: imageStorage, fileFilter: imageFilter, limits: { fileSize: 5 * 1024 * 1024 } });
+  upload = multer({ storage: multer.memoryStorage(), fileFilter: imageFilter, limits: { fileSize: 5 * 1024 * 1024 } });
+}
 
 const router = express.Router();
 
@@ -362,6 +369,9 @@ router.post('/upload-image', authenticateToken, uploadImage.single('image'), asy
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No image provided' });
+    }
+    if (isVercel) {
+      return res.status(503).json({ error: 'Image upload not available on serverless tier. Use a direct image URL instead.' });
     }
     const imageUrl = `/uploads/${req.file.filename}`;
     res.json({ image_url: imageUrl });
