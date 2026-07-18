@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chef-Mate - Your Recipe Companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/styles/main.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <a href="#" data-page="home" class="logo logo-link" id="logo-link">
+                        <h1>🍳 Chef-Mate</h1>
+                    </a>
+                    <div class="auth-section">
+                        <div id="auth-buttons" class="auth-buttons">
+                            <button class="btn btn-outline" id="login-btn">Login</button>
+                            <button class="btn btn-primary" id="signup-btn">Sign Up</button>
+                        </div>
+                        <div id="user-menu" class="user-menu hidden">
+                            <div class="notifications-container">
+                                <button class="notification-btn" id="notification-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                    </svg>
+                                    <span class="notification-badge" id="notification-badge" style="display: none;">0</span>
+                                </button>
+                                <div class="notification-dropdown" id="notification-dropdown">
+                                    <div class="notification-header">
+                                        <h3>Notifications</h3>
+                                        <button class="mark-all-read-btn" id="mark-all-read-btn" onclick="markAllNotificationsRead()">Mark all read</button>
+                                    </div>
+                                    <div class="notification-list" id="notification-list">
+                                        <div class="notification-empty">No notifications yet</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="user-avatar-dropdown">
+                                <button class="avatar-btn" id="avatar-btn">
+                                    <div class="avatar-circle">
+                                        <span id="avatar-initial">U</span>
+                                    </div>
+                                </button>
+                                <div class="dropdown-menu" id="user-dropdown">
+                                    <div class="dropdown-header">
+                                        <span id="user-name-dropdown"></span>
+                                    </div>
+                                    <a href="#" data-page="profile" class="dropdown-item dropdown-nav-item">Profile</a>
+                                    <a href="#" data-page="my-recipes" class="dropdown-item dropdown-nav-item">My Recipes</a>
+                                    <a href="#" data-page="favorites" class="dropdown-item dropdown-nav-item">Favorites</a>
+                                    <a href="#" data-page="add-recipe" class="dropdown-item dropdown-nav-item">Add Recipe</a>
+                                    <a href="/admin-portal-v2.html" id="admin-portal-link" class="dropdown-item" style="display: none; color: #764ba2; font-weight: 600;">🔐 Admin Portal</a>
+                                    <div class="dropdown-divider"></div>
+                                    <button class="dropdown-item logout-item" id="logout-btn">Logout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <div class="hero">
+                    <div class="container">
+                        <div class="hero-content">
+                            <h2>Discover Amazing Recipes</h2>
+                            <p>Find, save, and share your favorite recipes with Chef-Mate</p>
+                            <div class="search-container">
+                                <div class="search-box">
+                                    <input type="text" id="search-input" placeholder="Search by ingredients or cuisine...">
+                                    <button class="search-btn" id="search-btn">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="11" cy="11" r="8"></circle>
+                                            <path d="m21 21-4.35-4.35"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="filter-options">
+                                    <select id="cuisine-filter">
+                                        <option value="">All Cuisines</option>
+                                        <option value="italian">Italian</option>
+                                        <option value="chinese">Chinese</option>
+                                        <option value="mexican">Mexican</option>
+                                        <option value="indian">Indian</option>
+                                        <option value="american">American</option>
+                                        <option value="french">French</option>
+                                        <option value="thai">Thai</option>
+                                        <option value="japanese">Japanese</option>
+                                    </select>
+                                    <select id="difficulty-filter">
+                                        <option value="">All Difficulties</option>
+                                        <option value="easy">Easy</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="hard">Hard</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="margin-top: 1rem; text-align: center;">
+                                <a href="/downloads/chef-mate.apk" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    Download Android App
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div id="recipes-grid" class="recipes-grid">
+                        <!-- Recipes will be loaded here -->
+                    </div>
+                    <div id="loading" class="loading hidden">
+                        <div class="spinner"></div>
+                        <p>Loading recipes...</p>
+                    </div>
+                    <div id="loading-more" class="loading hidden">
+                        <div class="spinner"></div>
+                        <p>Loading more recipes...</p>
+                    </div>
+                    <div id="no-more-recipes" class="text-center hidden" style="padding: 1rem;">
+                        <p class="text-muted">All recipes loaded</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Recipes Page -->
+            <div id="my-recipes-page" class="page">
+                <div class="container">
+                    <div class="page-header">
+                        <h2>My Recipes</h2>
+                        <p>Manage your personal recipe collection</p>
+                    </div>
+                    <div id="my-recipes-grid" class="recipes-grid">
+                        <!-- User's recipes will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favorites Page -->
+            <div id="favorites-page" class="page">
+                <div class="container">
+                    <div class="page-header">
+                        <h2>Favorite Recipes</h2>
+                        <p>Your saved favorite recipes</p>
+                    </div>
+                    <div id="favorites-grid" class="recipes-grid">
+                        <!-- Favorite recipes will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profile-page" class="page">
+                <div class="container">
+                    <div class="profile-container">
+                        <div class="profile-sidebar">
+                            <div class="profile-avatar-section">
+                                <div class="profile-avatar">
+                                    <img id="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=f97316&color=fff&size=150" alt="Profile">
+                                    <button class="change-avatar-btn" id="change-avatar-btn">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                            <circle cx="12" cy="13" r="4"></circle>
+                                        </svg>
+                                    </button>
+                                    <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+                                </div>
+                                <h3 id="profile-user-name">User Name</h3>
+                                <p id="profile-user-email">user@example.com</p>
+                            </div>
+                            <div class="profile-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="stat-recipes">0</span>
+                                    <span class="stat-label">Recipes</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="stat-favorites">0</span>
+                                    <span class="stat-label">Favorites</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="stat-likes">0</span>
+                                    <span class="stat-label">Likes Received</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-content">
+                            <div class="profile-tabs">
+                                <button class="profile-tab active" data-tab="info">Profile Info</button>
+                                <button class="profile-tab" data-tab="security">Security</button>
+                                <button class="profile-tab" data-tab="preferences">Preferences</button>
+                            </div>
+                            <div class="profile-tab-content">
+                                <!-- Profile Info Tab -->
+                                <div class="tab-pane active" id="tab-info">
+                                    <h3>Profile Information</h3>
+                                    <form id="profile-form" class="profile-form">
+                                        <div class="form-group">
+                                            <label for="profile-username">Username</label>
+                                            <input type="text" id="profile-username" required placeholder="Must be unique">
+                                            <small class="form-help">3-50 characters, letters, numbers, and underscores only</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="profile-name">Full Name</label>
+                                            <input type="text" id="profile-name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="profile-email-input">Email</label>
+                                            <input type="email" id="profile-email-input" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="profile-bio">Bio</label>
+                                            <textarea id="profile-bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- Security Tab -->
+                                <div class="tab-pane" id="tab-security">
+                                    <h3>Change Password</h3>
+                                    <form id="password-form" class="profile-form">
+                                        <div class="form-group">
+                                            <label for="current-password">Current Password</label>
+                                            <input type="password" id="current-password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="new-password">New Password</label>
+                                            <input type="password" id="new-password" required minlength="8">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="confirm-password">Confirm New Password</label>
+                                            <input type="password" id="confirm-password" required minlength="8">
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn btn-primary">Update Password</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- Preferences Tab -->
+                                <div class="tab-pane" id="tab-preferences">
+                                    <h3>Dietary Preferences</h3>
+                                    <form id="preferences-form" class="profile-form">
+                                        <div class="form-group">
+                                            <label>Dietary Restrictions</label>
+                                            <div class="checkbox-group">
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="dietary" value="vegetarian">
+                                                    <span>Vegetarian</span>
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="dietary" value="vegan">
+                                                    <span>Vegan</span>
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="dietary" value="gluten-free">
+                                                    <span>Gluten-Free</span>
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="dietary" value="dairy-free">
+                                                    <span>Dairy-Free</span>
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="dietary" value="nut-free">
+                                                    <span>Nut-Free</span>
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="dietary" value="halal">
+                                                    <span>Halal</span>
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="dietary" value="kosher">
+                                                    <span>Kosher</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Allergies</label>
+                                            <div class="checkbox-group">
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="allergies" value="peanuts">
+                                                    <span>Peanuts</span>
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="allergies" value="tree-nuts">
+                                                    <span>Tree Nuts</span>
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="allergies" value="shellfish">
+                                                    <span>Shellfish</span>
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="allergies" value="eggs">
+                                                    <span>Eggs</span>
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" name="allergies" value="soy">
+                                                    <span>Soy</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Preferred Cuisines</label>
+                                            <div class="cuisine-input-container">
+                                                <select id="cuisine-select" class="cuisine-select">
+                                                    <option value="">Select a cuisine</option>
+                                                    <option value="italian">Italian</option>
+                                                    <option value="chinese">Chinese</option>
+                                                    <option value="mexican">Mexican</option>
+                                                    <option value="indian">Indian</option>
+                                                    <option value="american">American</option>
+                                                    <option value="french">French</option>
+                                                    <option value="thai">Thai</option>
+                                                    <option value="japanese">Japanese</option>
+                                                    <option value="korean">Korean</option>
+                                                    <option value="mediterranean">Mediterranean</option>
+                                                </select>
+                                                <button type="button" class="btn btn-outline" id="add-cuisine-btn">Add</button>
+                                            </div>
+                                            <div id="cuisine-list" class="cuisine-list">
+                                                <!-- Selected cuisines will appear here -->
+                                            </div>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn btn-primary">Save Preferences</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Recipe Page -->
+            <div id="add-recipe-page" class="page">
+                <div class="container">
+                    <div class="page-header">
+                        <h2>Add New Recipe</h2>
+                        <p>Share your culinary creation with the community</p>
+                    </div>
+                    <form id="recipe-form" class="recipe-form">
+                        <div class="form-group">
+                            <label for="recipe-title">Recipe Title</label>
+                            <input type="text" id="recipe-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipe-description">Description</label>
+                            <textarea id="recipe-description" rows="3"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="recipe-cuisine">Cuisine</label>
+                                <select id="recipe-cuisine">
+                                    <option value="">Select Cuisine</option>
+                                    <option value="italian">Italian</option>
+                                    <option value="chinese">Chinese</option>
+                                    <option value="mexican">Mexican</option>
+                                    <option value="indian">Indian</option>
+                                    <option value="american">American</option>
+                                    <option value="french">French</option>
+                                    <option value="thai">Thai</option>
+                                    <option value="japanese">Japanese</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipe-difficulty">Difficulty</label>
+                                <select id="recipe-difficulty">
+                                    <option value="easy">Easy</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="recipe-prep-time">Prep Time (minutes)</label>
+                                <input type="number" id="recipe-prep-time" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipe-cook-time">Cook Time (minutes)</label>
+                                <input type="number" id="recipe-cook-time" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipe-servings">Servings</label>
+                                <input type="number" id="recipe-servings" min="1" value="1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Recipe Photo</label>
+                            <div class="image-upload-area" id="image-upload-area">
+                                <div class="image-upload-placeholder">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                        <polyline points="21 15 16 10 5 21"></polyline>
+                                    </svg>
+                                    <p>Tap to select photo</p>
+                                </div>
+                                <img id="recipe-image-preview" class="image-upload-preview" style="display: none;">
+                                <input type="file" id="recipe-image-input" accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Ingredients</label>
+                            <div id="ingredients-container">
+                                <div class="ingredient-item">
+                                    <input type="text" placeholder="e.g., 2 cups flour" class="ingredient-input">
+                                    <button type="button" class="remove-ingredient">×</button>
+                                </div>
+                            </div>
+                            <button type="button" id="add-ingredient" class="btn btn-outline">Add Ingredient</button>
+                        </div>
+                        <div class="form-group">
+                            <label>Instructions</label>
+                            <div id="instructions-container">
+                                <div class="instruction-item">
+                                    <textarea placeholder="Step 1: Describe the first step..." class="instruction-input" rows="2"></textarea>
+                                    <button type="button" class="remove-instruction">×</button>
+                                </div>
+                            </div>
+                            <button type="button" id="add-instruction" class="btn btn-outline">Add Step</button>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="submit-recipe">Save Recipe</button>
+                            <button type="button" class="btn btn-outline" id="cancel-recipe">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- Auth Modal -->
+        <div id="auth-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="auth-modal-title">Login</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="auth-form">
+                    <div class="form-group" id="username-group" style="display: none;">
+                        <label for="auth-username">Username</label>
+                        <input type="text" id="auth-username" placeholder="Choose a username">
+                    </div>
+                    <div class="form-group" id="name-group" style="display: none;">
+                        <label for="auth-name">Full Name</label>
+                        <input type="text" id="auth-name" placeholder="Your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-email">Email</label>
+                        <input type="email" id="auth-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-password">Password</label>
+                        <input type="password" id="auth-password" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="auth-submit">Login</button>
+                    </div>
+                </form>
+                <div class="auth-switch">
+                    <p id="auth-switch-text">Don't have an account? <a href="#" id="auth-switch-link">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recipe Detail Modal -->
+        <div id="recipe-modal" class="modal">
+            <div class="modal-content recipe-modal-content">
+                <div class="modal-header">
+                    <h3 id="recipe-modal-title"></h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div id="recipe-modal-body">
+                    <!-- Recipe details will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div id="confirm-modal" class="modal">
+            <div class="modal-content confirm-modal-content">
+                <div class="confirm-modal-body">
+                    <div class="confirm-icon">⚠️</div>
+                    <h3 id="confirm-title">Confirm Action</h3>
+                    <p id="confirm-message">Are you sure you want to proceed?</p>
+                </div>
+                <div class="confirm-modal-actions">
+                    <button class="btn btn-outline" id="confirm-cancel-btn">Cancel</button>
+                    <button class="btn btn-danger" id="confirm-ok-btn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/js/main.js"></script>
+</body>
+</html>
