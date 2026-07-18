@@ -129,6 +129,9 @@ app.use((err, req, res, next) => {
 // SPA fallback — serve index.html for all non-API client-side routes
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api/')) return next();
+  if (process.env.VERCEL === '1') {
+    return res.status(404).json({ error: 'Not found' });
+  }
   res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
 });
 
@@ -137,27 +140,33 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Initialize database and start server
-async function startServer() {
-  try {
-    const uploadsDir = path.join(__dirname, '..', 'uploads');
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
-    }
-    const downloadsDir = path.join(__dirname, '..', 'downloads');
-    if (!fs.existsSync(downloadsDir)) {
-      fs.mkdirSync(downloadsDir, { recursive: true });
-    }
-    await testConnection();
-    await initializeDatabase();
-    
-    app.listen(port, () => {
-      console.log(`🍳 Chef-Mate API server running on port ${port}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
+async function ensureDirs() {
+  const uploadsDir = path.join(__dirname, '..', 'uploads');
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+  const downloadsDir = path.join(__dirname, '..', 'downloads');
+  if (!fs.existsSync(downloadsDir)) {
+    fs.mkdirSync(downloadsDir, { recursive: true });
   }
 }
 
-startServer();
+// Vercel: only connect DB on cold start, don't listen
+if (process.env.VERCEL !== '1') {
+  const startServer = async () => {
+    try {
+      await ensureDirs();
+      await testConnection();
+      await initializeDatabase();
+      app.listen(port, () => {
+        console.log(`🍳 Chef-Mate API server running on port ${port}`);
+      });
+    } catch (error) {
+      console.error('Failed to start server:', error);
+      process.exit(1);
+    }
+  };
+  startServer();
+}
+
+export default app;
