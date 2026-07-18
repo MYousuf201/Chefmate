@@ -1,11 +1,12 @@
 # Chef-Mate
 
-Full-stack recipe discovery and management platform with AI-powered ingredient recognition from images. Built with **Express.js + MySQL** backend and **Flutter** frontend.
+Full-stack recipe discovery and management platform with AI-powered ingredient recognition from images. Built with **Express.js + MySQL** backend, **Flutter** mobile app, and **Vite + vanilla JS** web frontend.
 
 ## Features
 
 ### Core Recipe Management
 - **CRUD recipes** — Create, read, update, delete recipes with ingredients (JSON array), instructions, cuisine, difficulty, prep/cook time, servings
+- **Paginated feed** — Infinite scroll on both web and mobile with `page`/`limit` parameters and `hasMore` flag (default 15 per page)
 - **Search & filter** — Search by title, description, cuisine, or ingredients; filter by cuisine and difficulty
 - **Personalized feed** — Recommendation engine scores recipes based on user's liked/rated recipes (cuisine 35%, ingredients 30%, difficulty 10%, time 15%, favorite creators 10%)
 - **Favorites** — Save and manage favorite recipes
@@ -39,9 +40,9 @@ Full-stack recipe discovery and management platform with AI-powered ingredient r
 ```
 project/
 ├── server/                    # Express.js backend (Node.js + MySQL)
-│   ├── index.js               # App entry: security, rate limiting, routes, DB init
+│   ├── index.js               # App entry: security, rate limiting, routes, DB init, static serving
 │   ├── config/
-│   │   ├── database.js        # MySQL pool connection + auto-migration
+│   │   ├── database.js        # MySQL pool connection + auto-migration + SSL support
 │   │   └── validation.js      # validateId helper
 │   ├── middleware/
 │   │   └── auth.js            # JWT middleware (authenticateToken, optionalAuth, role guards)
@@ -55,19 +56,25 @@ project/
 │   │   ├── vision.js          # Groq API integration for ingredient recognition
 │   │   └── recommendation.js  # Personalized recipe scoring engine
 │   └── migrations/            # SQL migration files
+├── src/                       # Web frontend (Vite + vanilla JS)
+│   ├── js/main.js             # App logic, routing, infinite scroll, API calls
+│   └── styles/main.css        # Responsive styles
 ├── chef_mate_app/             # Flutter frontend (cross-platform)
 │   └── lib/
 │       ├── main.dart          # App entry with routing
-│       ├── config/            # Theme, API config
+│       ├── config/            # Theme, API config (supports --dart-define=API_BASE_URL)
 │       ├── models/            # Recipe, User, Comment, Notification, Rating data classes
 │       ├── providers/         # AuthProvider, RecipeProvider, UserProvider, NotificationProvider
-│       ├── screens/           # 14 screens (splash, login, register, home, recipe detail,
+│       ├── screens/           # 15 screens (splash, login, register, home, recipe detail,
 │       │                      #   add recipe, my recipes, favorites, profile, user profile,
 │       │                      #   notifications, admin, admin users, smart search)
 │       ├── services/          # API service layer (auth, recipe, user, notification)
 │       └── widgets/           # Reusable widgets (recipe card, rating, comment tile, etc.)
+├── downloads/                 # APK download directory (served at /downloads/chef-mate.apk)
+├── index.html                 # Web entry point
+├── vite.config.js             # Vite build config
 ├── .env.example               # Environment variable template
-└── package.json               # Backend dependencies
+└── package.json               # Backend + frontend dependencies
 ```
 
 ## Tech Stack
@@ -75,11 +82,13 @@ project/
 | Layer | Technology |
 |-------|-----------|
 | Backend | Node.js, Express.js, MySQL (mysql2/promise) |
-| Frontend | Flutter, Provider (state management) |
+| Web Frontend | Vite, vanilla JavaScript, CSS |
+| Mobile Frontend | Flutter, Provider (state management) |
 | Auth | JWT (HS256), bcrypt (12 rounds) |
 | Security | Helmet, CORS, express-rate-limit |
 | AI Vision | Groq API — meta-llama/llama-4-scout-17b-16e-instruct |
 | Uploads | Multer (in-memory, 5 MB limit) |
+| Deployment | Render (Node.js), TiDB Cloud (MySQL) |
 
 ## API Endpoints
 
@@ -125,21 +134,34 @@ project/
    ```
    cp .env.example .env
    ```
-   Edit `.env` with your MySQL credentials and Groq API key.
+   Edit `.env` with your MySQL credentials, Groq API key, and JWT secret.
 
-2. **Backend**
+2. **Backend + Web frontend (dev)**
    ```
    npm install
-   node server/index.js
+   npm run dev
    ```
-   Tables auto-create on startup.
+   Starts Vite dev server (port 5173) and backend (port 3001) concurrently. Tables auto-create on startup.
 
-3. **Flutter app**
+3. **Production build (Run on Render)**
+   ```
+   npm install
+   npm run build          # builds web frontend into dist/
+   npm start              # serves dist/ + API + APK downloads
+   ```
+
+4. **Flutter app**
    ```
    cd chef_mate_app
    flutter pub get
-   flutter run -d chrome
+   flutter run -d chrome            # web debug
+   flutter run                      # connected device debug
    ```
+   **Production APK:**
+   ```
+   flutter build apk --release --dart-define=API_BASE_URL=https://your-app.onrender.com
+   ```
+   Copy the APK to `downloads/chef-mate.apk` to serve it from the web frontend.
 
 ## Environment Variables
 
@@ -155,6 +177,7 @@ project/
 | `PORT` | Server port (default 3001) |
 | `NODE_ENV` | development / production |
 | `GROQ_API_KEY` | API key for Groq vision service |
+| `DB_SSL` | Set to `true` for TiDB Cloud (SSL-enabled connection) |
 
 ## Security
 
